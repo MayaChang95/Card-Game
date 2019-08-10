@@ -1,0 +1,233 @@
+<html>
+<head>
+	<title>CardGame</title>
+	<link href="https://fonts.googleapis.com/css?family=Nunito+Sans&display=swap" rel="stylesheet">
+	<style type="text/css">
+		* {
+			box-sizing: border-box;
+			margin:0;
+			padding: 0;
+		}
+		
+		#grid-container {
+			height: 100%;
+			width: 100%;
+			display: grid;
+			grid-template-rows: 1fr 2fr 1fr 1fr;
+			font-family: 'Nunito Sans',sans-serif;
+			background-color: #EEEEEE;
+		}
+		#head1 {
+			text-align: center;
+			font-size: 115;
+		}
+		.card {
+			grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 2fr;
+			display: inline-grid;
+			grid-column-gap: 50px;
+			text-align: center;
+			font-size: 98px;
+			color: #D26349;
+
+
+		}
+		.cards {
+			box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+			width: 185px; 
+			height:280px; 
+			border: 2px solid #707070; 
+			border-radius: 8px; 
+			padding-top:55; 
+			background-color: #C0827E;
+		}
+		#head2 {
+			font-family: 'Nunito Sans',sans-serif;
+			text-align: center;
+			margin-top: 35;
+			font-size: 70;
+			font-weight: bold;
+		}
+
+		#play {
+			margin: 0 auto;
+			background-color: #8FC7B7;
+			color: #B59788;
+			border-radius: 25px;
+			box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.3);
+			border:1px solid #707070;
+
+		}
+
+		.flipped{
+			background-color: #8097CB;
+			color: #707070;
+			font-size: 150;
+			padding:23;
+		}
+
+
+		span{
+			display: inline-grid;
+			margin-top: -180px;
+			color: #BDCAE6;
+		}
+
+		
+	
+	</style>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script type="text/javascript">
+		var cards = [1,2,3,4,5];
+		var n = 1;
+		var playing=false;
+		var cardStatus = [false,false,false,false,false];
+		var timeWon=0;
+		var head2=null;
+		var lines=document.getElementsByClassName("line");
+
+
+
+					
+		
+		function boxClicked(e){
+			console.log("e.value=" + e.value);
+			console.log("cardStatus[n-1]=" + cardStatus[n-1]);
+			console.log("n=" +n);
+			console.log('\n');
+
+
+
+			if(playing===false){
+				alert("press the play button fitst");
+				return;
+			}
+			if(e.value===n){
+				if($(e).hasClass('flipped')){
+					e.classList.remove('flipped');
+					e.innerHTML="&#9829;";
+					e.style.Color="#D2634B";
+					e.style.backgroundColor="#C0827E";
+					cardStatus[e.value-1]===false;
+					var span = document.createElement("span");
+  					span.innerHTML = "_";
+  					console.log(e.id);
+  					document.getElementById(e.id).appendChild(span);
+					console.log("1");
+					console.log(e);
+				
+					return;
+				}else{
+					
+					
+
+					
+					e.classList.add('flipped');
+					e.innerHTML=e.value;
+					e.style.backgroundColor="#8097CB";
+					cardStatus[e.value-1]=true;
+					n++;
+					console.log("2");
+					var span = document.createElement("span");
+  					span.innerHTML = "_";
+  					console.log(e.id);
+  					document.getElementById(e.id).appendChild(span);
+					
+			
+					
+					
+				}
+			}else{
+
+				if(cardStatus[e.value-1]===true){
+					console.log("3");
+					return;
+				}else{
+					if($(e).hasClass('flipped')){
+						
+						e.classList.remove('flipped');
+						e.innerHTML="&#9829";
+						e.style.backgroundColor="#C0827E"
+						cardStatus[e.value-1]===false;
+						
+						console.log("4");
+						return;
+					}else{
+						e.classList.add('flipped');
+						e.innerHTML=e.value;
+					
+						e.style.backgroundColor="#8097CB";
+						cardStatus[e.value-1]===false;
+						var span = document.createElement("span");
+  						span.innerHTML = "_";
+  						console.log(e.id);
+  						document.getElementById(e.id).appendChild(span);	
+						alert("Wrong one!");
+						console.log("5");
+						return;
+					}
+				}
+
+			}
+
+			if(n===6){
+				alert("You win!");
+				timeWon++;
+				document.getElementById("wontime").innerHTML=timeWon;
+				console.log(timeWon);
+			}
+
+		}
+
+		
+		function shuffle(arr) {
+			for (var i = arr.length-1; i >=0 ; i--) {
+				var rdn = Math.floor(Math.random() * 5);
+				
+				var a = arr[i];
+				arr[i] = arr[rdn];
+				arr[rdn] = a;
+			
+			}
+			console.log("arr: " + arr);
+			return arr;
+		}
+		function play() {
+			playing=true;
+			shuffle(cards);
+			for (var i = 1; i <=cards.length; i++) {
+				document.getElementById("card"+i.toString()).value=cards[i-1];	
+			}
+
+			console.log(cards);
+
+		}
+
+		function windowLoaded(){
+			for (var i = 0; i < lines.length; i++) {
+				lines[i].innerHTML=" ";
+			}
+		}
+
+		window.onload=windowLoaded;
+
+		
+	</script>
+</head>
+
+<body>
+	<div id="grid-container">
+		<div id="head1" style="color:#707070">Card Game</div>
+		<div class="card">
+			<div class="empty"></div>
+			<div class="cards" id="card1" onclick="boxClicked(this)">&#9829;<span class="line">___</span></div>
+			<div class="cards" id="card2" onclick="boxClicked(this)">&#9829;<span class="line">___</span></div>
+			<div class="cards" id="card3" onclick="boxClicked(this)">&#9829;<span class="line">___</span></div>
+			<div class="cards" id="card4" onclick="boxClicked(this)">&#9829;<span class="line">___</span></div>
+			<div class="cards" id="card5" onclick="boxClicked(this)">&#9829;<span class="line">___</span></div>
+			<div class="emtpy"></div>
+		</div>
+		<div id="head2" style="color: rgba(205,141,127, 0.75)">You have won <span id="wontime">0</span> time(s)!</div>
+		<button id="play" onclick="play()" style="font-size: 70; height: 96; width: 352px;">PLAY!</button>
+	</div>
+</body>
+</html>
